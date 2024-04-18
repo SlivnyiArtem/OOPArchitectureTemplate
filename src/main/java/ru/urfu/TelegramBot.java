@@ -11,13 +11,15 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 /**
  * Телеграм бот
  */
-public class TelegramBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot implements Bot {
 
     private final String telegramBotName;
+    private final ReplyBuilder replyBuilder;
 
-    public TelegramBot(String telegramBotName, String token) {
+    public TelegramBot(String telegramBotName, String token, ReplyBuilder replyBuilder) {
         super(token);
         this.telegramBotName = telegramBotName;
+        this.replyBuilder = replyBuilder;
     }
 
     public void start() {
@@ -30,10 +32,18 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(String chatId, String message) {
+    /**
+     * реагирует на входящие сообщения
+     *
+     * @param chatId       - id чата
+     * @param inputMessage - входящее сообщение
+     */
+    @Override
+    public void handle(String chatId, String inputMessage) {
+        String reply = replyBuilder.generateReply(inputMessage);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
+        sendMessage.setText(reply);
 
         try {
             execute(sendMessage);
@@ -48,7 +58,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             Message updateMessage = update.getMessage();
             Long chatId = updateMessage.getChatId();
             String messageFromUser = updateMessage.getText();
-            // TODO
+
+            handle(String.valueOf(chatId), messageFromUser);
         }
     }
 
