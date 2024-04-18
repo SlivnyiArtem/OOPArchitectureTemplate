@@ -7,7 +7,7 @@ public interface ReplyBuilder {
     /**
      * генерация ответа
      * @param inputText - входящий текст
-     * @return
+     * @return сгенерированный ответ
      */
     String generateReply(String inputText);
 }

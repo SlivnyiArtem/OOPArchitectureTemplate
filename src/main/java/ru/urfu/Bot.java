@@ -14,5 +14,5 @@ public interface Bot {
      * @param chatId - id чата
      * @param inputMessage - входящее сообщение
      */
-    void handle(String chatId, String inputMessage)
+    void handle(String chatId, String inputMessage);
 }
