@@ -1,7 +1,5 @@
 package ru.urfu;
 
-import discord4j.common.util.Snowflake;
-import discord4j.core.object.entity.channel.MessageChannel;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -44,6 +42,11 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
         }
     }
 
+    /**
+     * отсылает ответ
+     * @param chatId - Id чата
+     * @param answerText текст ответа
+     */
     public void sendAnswer(String chatId, String answerText){
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);

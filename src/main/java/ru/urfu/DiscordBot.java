@@ -44,6 +44,11 @@ public class DiscordBot implements Bot{
         client.onDisconnect().block();
     }
 
+    /**
+     * отсылает ответ
+     * @param chatId - Id чата
+     * @param answerText текст ответа
+     */
     public void sendAnswer(String chatId, String answerText){
         Snowflake channelId = Snowflake.of(chatId);
         MessageChannel channel = client.getChannelById(channelId).ofType(MessageChannel.class).block();
