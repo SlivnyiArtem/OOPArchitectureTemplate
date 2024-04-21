@@ -10,7 +10,7 @@ public class BotBehaviour {
      * @param inputMessage - входящее сообщения
      */
     public String makeAnswer(String chatId, String inputMessage){
-        return null;
+        return "\"Ваше сообщение: '%s'\"".formatted(inputMessage);
     }
 
 }
