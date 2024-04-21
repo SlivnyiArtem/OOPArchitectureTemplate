@@ -13,13 +13,13 @@ import discord4j.core.object.entity.channel.MessageChannel;
 public class DiscordBot implements Bot{
 
     private final String token;
-    private final ReplyBuilder replyBuilder;
+    private final BotBehaviour botBehaviour;
 
     private GatewayDiscordClient client;
 
-    public DiscordBot(String token, ReplyBuilder replyBuilder) {
+    public DiscordBot(String token, BotBehaviour botBehaviour) {
         this.token = token;
-        this.replyBuilder = replyBuilder;
+        this.botBehaviour = botBehaviour;
     }
 
     public void start() {
@@ -37,26 +37,18 @@ public class DiscordBot implements Bot{
                         String chanelID = eventMessage.getChannelId().asString();
                         String messageFromUser = eventMessage.getContent();
 
-                        handle(chanelID, messageFromUser);
+                        sendAnswer(chanelID, botBehaviour.makeAnswer(chanelID, messageFromUser));
                     }
                 });
         System.out.println("Discord бот запущен");
         client.onDisconnect().block();
     }
 
-    /**
-     * реагирует на входящие сообщения
-     *
-     * @param chatId       - id чата
-     * @param inputMessage - входящее сообщение
-     */
-    @Override
-    public void handle(String chatId, String inputMessage) {
-        String reply = replyBuilder.generateReply(inputMessage);
+    public void sendAnswer(String chatId, String answerText){
         Snowflake channelId = Snowflake.of(chatId);
         MessageChannel channel = client.getChannelById(channelId).ofType(MessageChannel.class).block();
         if (channel != null) {
-            channel.createMessage(reply).block();
+            channel.createMessage(answerText).block();
         } else {
             System.err.println("Канал не найден");
         }
