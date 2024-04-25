@@ -11,13 +11,15 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 /**
  * Телеграм бот
  */
-public class TelegramBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot implements Bot {
 
     private final String telegramBotName;
+    private final BotBehaviour botBehaviour;
 
-    public TelegramBot(String telegramBotName, String token) {
+    public TelegramBot(String telegramBotName, String token, BotBehaviour botBehaviour) {
         super(token);
         this.telegramBotName = telegramBotName;
+        this.botBehaviour = botBehaviour;
     }
 
     public void start() {
@@ -30,25 +32,30 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(String chatId, String message) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(message);
-
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            System.err.println("Не удалось отправить сообщение. " + e.getMessage());
-        }
-    }
-
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message updateMessage = update.getMessage();
             Long chatId = updateMessage.getChatId();
             String messageFromUser = updateMessage.getText();
-            // TODO
+            sendAnswer(String.valueOf(chatId), botBehaviour.makeAnswer(messageFromUser));
+        }
+    }
+
+    /**
+     * отсылает ответ
+     * @param chatId - Id чата
+     * @param answerText текст ответа
+     */
+    private void sendAnswer(String chatId, String answerText){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(answerText);
+
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            System.err.println("Не удалось отправить сообщение. " + e.getMessage());
         }
     }
 

@@ -10,14 +10,16 @@ import discord4j.core.object.entity.channel.MessageChannel;
 /**
  * Дискорд бот
  */
-public class DiscordBot {
+public class DiscordBot implements Bot{
 
     private final String token;
+    private final BotBehaviour botBehaviour;
 
     private GatewayDiscordClient client;
 
-    public DiscordBot(String token) {
+    public DiscordBot(String token, BotBehaviour botBehaviour) {
         this.token = token;
+        this.botBehaviour = botBehaviour;
     }
 
     public void start() {
@@ -34,18 +36,24 @@ public class DiscordBot {
                     if (eventMessage.getAuthor().map(user -> !user.isBot()).orElse(false)) {
                         String chanelID = eventMessage.getChannelId().asString();
                         String messageFromUser = eventMessage.getContent();
-                        // TODO
+
+                        sendAnswer(chanelID, botBehaviour.makeAnswer(messageFromUser));
                     }
                 });
         System.out.println("Discord бот запущен");
         client.onDisconnect().block();
     }
 
-    public void sendMessage(String chatId, String message) {
+    /**
+     * отсылает ответ
+     * @param chatId - Id чата
+     * @param answerText текст ответа
+     */
+    private void sendAnswer(String chatId, String answerText){
         Snowflake channelId = Snowflake.of(chatId);
         MessageChannel channel = client.getChannelById(channelId).ofType(MessageChannel.class).block();
         if (channel != null) {
-            channel.createMessage(message).block();
+            channel.createMessage(answerText).block();
         } else {
             System.err.println("Канал не найден");
         }
