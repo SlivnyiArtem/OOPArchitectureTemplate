@@ -37,7 +37,7 @@ public class DiscordBot implements Bot{
                         String chanelID = eventMessage.getChannelId().asString();
                         String messageFromUser = eventMessage.getContent();
 
-                        sendAnswer(chanelID, botBehaviour.makeAnswer(chanelID, messageFromUser));
+                        sendAnswer(chanelID, botBehaviour.makeAnswer(messageFromUser));
                     }
                 });
         System.out.println("Discord бот запущен");
@@ -49,7 +49,7 @@ public class DiscordBot implements Bot{
      * @param chatId - Id чата
      * @param answerText текст ответа
      */
-    public void sendAnswer(String chatId, String answerText){
+    private void sendAnswer(String chatId, String answerText){
         Snowflake channelId = Snowflake.of(chatId);
         MessageChannel channel = client.getChannelById(channelId).ofType(MessageChannel.class).block();
         if (channel != null) {

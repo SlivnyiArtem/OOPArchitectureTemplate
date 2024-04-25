@@ -38,7 +38,7 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
             Message updateMessage = update.getMessage();
             Long chatId = updateMessage.getChatId();
             String messageFromUser = updateMessage.getText();
-            sendAnswer(String.valueOf(chatId), botBehaviour.makeAnswer(String.valueOf(chatId), messageFromUser));
+            sendAnswer(String.valueOf(chatId), botBehaviour.makeAnswer(messageFromUser));
         }
     }
 
@@ -47,7 +47,7 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
      * @param chatId - Id чата
      * @param answerText текст ответа
      */
-    public void sendAnswer(String chatId, String answerText){
+    private void sendAnswer(String chatId, String answerText){
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(answerText);

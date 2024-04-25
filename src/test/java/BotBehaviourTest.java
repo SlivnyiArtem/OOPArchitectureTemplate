@@ -6,7 +6,7 @@ public class BotBehaviourTest {
     @Test
     public void makeAnswerStandardMessage(){
         BotBehaviour botBehaviour = new BotBehaviour();
-        var actualAnswer = botBehaviour.makeAnswer("1", "Hello");
+        var actualAnswer = botBehaviour.makeAnswer("Hello");
         var expectedAnswer = "\"Ваше сообщение: 'Hello'\"";
         Assertions.assertEquals(expectedAnswer, actualAnswer);
     }
